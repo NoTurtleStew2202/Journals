@@ -1,0 +1,390 @@
+package miranda_3_arraygame;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Miranda_3_Arraygame {
+
+    static Thing[] awesome = new Thing[1];
+    static Trap[] mineField = new Trap[8];
+    static Bad[] Wae = new Bad[3];
+    static Wall[] wallz = new Wall[3];
+
+    public static void main(String[] args) {
+
+        char[][] landscape = new char[10][10];
+
+        Random randy = new Random();
+        awesome = new Thing[1];
+        mineField = new Trap[8];
+        landscape = new char[10][10];
+       
+        for (int i = 0; i < 5; i++) {
+            mineField[i] = new Trap(randy.nextInt(10), randy.nextInt(10));
+        }
+        Thing ere = new Thing(3, 4);
+    
+        Bad guy = new Bad(3, 7);
+        Wae = new Bad[3];
+        landscape = new char[10][10];
+        for (int i = 0; i < 3; i++) {
+            Wae[i] = new Bad(randy.nextInt(10), randy.nextInt(10));
+        }
+
+          for (int i = 0; i < 3; i++) {
+            wallz[i] = new Wall(randy.nextInt(10), randy.nextInt(10));
+        }
+        
+        
+        Scanner McScanner = new Scanner(System.in);
+        System.err.println("A long, long Time ago there was this dude. he became evil,"
+                + " now you must kill him.");
+
+        while (ere.isAlive) {
+            landscape = new char[10][10];
+
+            System.out.println("Which direction would you like to go?(use q-w-e-a-s-d-z-x-c)");
+            String answer = McScanner.nextLine();
+            System.out.printf("You said %s .\n", answer);
+            ere.move(answer);
+            for (int i = 0; i < guy.length; i++) {
+             
+                guy.move();
+            }
+            ere.checkfortrap();
+            ere.checkforBad();
+
+            landscape[ere.getY()][ere.getX()] = ere.getSymbol();
+
+            for (int i = 0; i < 8; i++) {
+                landscape[mineField[0].getY()][mineField[0].getX()] = mineField[0].getSymbol();
+            }
+            for (int i = 0; i < 3; i++) {
+                landscape[wallz[i].getY()][wallz[i].getX()] = wallz[i].getSymbol();
+            }
+            for (int i = 0; i < 3; i++) {
+                landscape[Wae[i].getY()][Wae[i].getX()] = Wae[i].getSymbol();
+            }
+            landscape[guy.getY()][guy.getX()] = guy.getSymbol();
+            for (int i = 0; i <= landscape[0].length - 1; i++) {
+                for (int j = 0; j <= landscape[1].length - 2; j++) {
+                    if (landscape[i][j] == 0) {
+                        System.out.print("~");
+                    } else {
+                        System.out.print(landscape[i][j]);
+                    }
+                }
+                System.out.println("~");
+
+            }
+        }
+    }
+
+    static class Thing {
+
+        char symbol = '@';
+        int x, y;
+
+        boolean isAlive = true;
+
+        public Thing(int a, int b) {
+            x = a;
+            y = b;
+
+        }
+
+        char getSymbol() {
+            return this.symbol;
+        }
+
+        int getX() {
+            return this.x;
+        }
+
+        int getY() {
+            return this.y;
+        }
+
+        void moveSouth() {
+            this.y += 1;
+        }
+
+        void moveEast() {
+            this.x += 1;
+        }
+
+        void moveWest() {
+            this.x -= 1;
+        }
+
+        void moveNorth() {
+            this.y -= 1;
+        }
+
+        void moveSoutheast() {
+            this.y += 1;
+            this.x += 1;
+        }
+
+        void moveNortheast() {
+            this.y -= 1;
+            this.x += 1;
+        }
+
+        void moveNorthwest() {
+            this.y -= 1;
+            this.x -= 1;
+        }
+
+        void moveSouthwest() {
+            this.y += 1;
+            this.x -= 1;
+        }
+
+        void move(String answer) {
+            answer = answer.toLowerCase();
+            if (answer.startsWith("w")) {
+                this.moveNorth();
+                System.err.println("you are moving North");
+            } else if (answer.startsWith("s")) {
+                this.moveSouth();
+                System.err.println("you are moving South");
+            } else if (answer.startsWith("d")) {
+                this.moveEast();
+                System.err.println("you are moving East");
+            } else if (answer.startsWith("a")) {
+                this.moveWest();
+                System.err.println("You are moving west");
+            } else if (answer.startsWith("c")) {
+                this.moveSoutheast();
+                System.err.println("you are moving SouthEast");
+            } else if (answer.startsWith("e")) {
+                this.moveNortheast();
+                System.err.println("you are moving NorthEast");
+            } else if (answer.startsWith("z")) {
+                this.moveSouthwest();
+                System.err.println("you are moving SouthWest");
+            } else if (answer.startsWith("q")) {
+                this.moveSouthwest();
+                System.err.println("you are moving NorthWest");
+            } else {
+                System.err.println("I'm sorry, I didn't understand You.");
+            }
+
+        }
+
+        void checkfortrap() {
+            for (int i = 0; i < 8; i++) {
+                if (this.x == mineField[0].getX() && this.y == mineField[0].getY()) {
+                    this.isAlive = false;
+                    System.out.println("You Died");
+                    System.out.printf("my x is %d the mine's x is %d my y is % d mine's y is %d", this.x, mineField[i].getX(), this.y, mineField[i].getY());
+                }
+            }
+        }
+
+        void checkforBad() {
+            for (int i = 0; i < 3; i++) {
+                if (this.x == Wae[0].getX() && this.y == Wae[0].getY()) {
+                    this.isAlive = false;
+                    System.out.println("You Died");
+                }
+            }
+        }
+
+        boolean canigoNorth() {
+            for (int i = 0; i < 3; i++) {
+                if (this.x == wallz[i].x) {
+                    if (wallz[i].y == this.y - 1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        boolean canigoSouth() {
+            for (int i = 0; i < 3; i++) {
+                if (this.x == wallz[i].x) {
+                    if (wallz[i].y == this.y + 1) {
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        }
+
+        boolean canigoEast() {
+            for (int i = 0; i < 3; i++) {
+                if (this.x == wallz[i].x) {
+                    if (wallz[i].x == this.x + 1) {
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        }
+
+        boolean canigoWest() {
+            for (int i = 0; i < 3; i++) {
+                if (this.x - 1 == wallz[i].x) {
+                    if (wallz[i].x == this.x - 1) {
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        }
+
+    }
+
+    static class Bad {
+
+        char symbol = '<';
+        int x = 3;
+        int y = 7;
+        private int length;
+
+        public Bad(int a, int b) {
+            x = a;
+            y = b;
+
+        }
+
+        void setX(int a) {
+            this.x = a;
+        }
+
+        void setY(int a) {
+            this.y = a;
+        }
+
+        char getSymbol() {
+            return this.symbol;
+        }
+
+        int getX() {
+            return this.x;
+        }
+
+        int getY() {
+            return this.y;
+        }
+
+        void moveSouth() {
+            this.y += 1;
+        }
+
+        void moveEast() {
+            this.x += 1;
+        }
+
+        void moveWest() {
+            this.x -= 1;
+        }
+
+        void moveNorth() {
+            this.y -= 1;
+        }
+
+        void move(String direction) {
+            for (int i = 0; i < 3; i++) {
+                if (this.y > awesome[i].getY()) {
+                    this.moveNorth();
+                } else if (this.y < awesome[i].getY()) {
+                    this.moveSouth();
+                } else if (this.x < awesome[i].getX()) {
+                    this.moveEast();
+                } else if (this.x > awesome[i].getX()) {
+                    this.moveWest();
+                }
+            }
+        }
+    }
+
+    static class Trap {
+
+        char symbol = '*';
+        int x, y;
+        boolean isActive = true;
+
+        public Trap(int a, int b) {
+            x = a;
+            y = b;
+        }
+
+        int getX() {
+            return this.x;
+        }
+
+        int getY() {
+            return this.y;
+        }
+
+        char getSymbol() {
+            return this.symbol;
+        }
+
+        boolean getisActive() {
+            return this.isActive;
+        }
+
+        void beSnapped() {
+            this.isActive = false;
+        }
+    }
+
+    static class Wall {
+
+        char symbol = '|';
+        int x, y;
+
+        public Wall(int a, int b) {
+            x = a;
+            y = b;
+        }
+
+        int getX() {
+            return this.x;
+        }
+
+        int getY() {
+            return this.y;
+        }
+
+        char getSymbol() {
+            return this.symbol;
+        }
+    }
+    
+    static class Projectile{
+    int x,y;
+    char symbol = '!';
+    public Projectile (int a, int b){
+     x = a;
+     y = b;
+    }
+    int getX() {
+            return this.x;
+        }
+
+        int getY() {
+            return this.y;
+        }
+
+        char getSymbol() {
+            return this.symbol;
+        }
+        void swing() {
+            
+            
+    }
+    
+    }
+static class Win{
+
+}
+}
